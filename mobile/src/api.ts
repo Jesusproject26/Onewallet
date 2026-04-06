@@ -26,6 +26,13 @@ export async function resolveAccount(account_number: string, bank_code: string) 
 export async function withdrawToBank(data: any, token: string) {
   return apiPost("/bank/withdraw", data, token);
 }
+export async function getKycStatus(token: string) {
+  return apiGet("/kyc/status", token);
+}
+
+export async function submitKyc(data: any, token: string) {
+  return apiPost("/kyc/submit", data, token);
+}
 
 export async function apiGet(path: string, token: string) {
   const res = await fetch(`${BASE_URL}${path}`, {
