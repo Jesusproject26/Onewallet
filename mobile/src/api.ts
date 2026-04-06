@@ -29,6 +29,13 @@ export async function apiGet(path: string, token: string) {
 export async function verifyAjoPayment(groupId: number, reference: string, token: string) {
   return apiGet(`/ajo/groups/${groupId}/verify/${reference}`, token);
 }
+export async function setPin(pin: string, token: string) {
+  return apiPost("/pin/set", { pin }, token);
+}
+
+export async function verifyPin(pin: string, token: string) {
+  return apiPost("/pin/verify", { pin }, token);
+}
 
   if (!res.ok) {
     const text = await res.text();
