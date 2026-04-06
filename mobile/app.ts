@@ -11,6 +11,7 @@ import AjoContributionScreen from "./src/screens/AjoContributionScreen";
 import SetPinScreen from "./src/screens/SetPinScreen";
 import PinLoginScreen from "./src/screens/PinLoginScreen";
 import WalletOverviewScreen from "./src/screens/WalletOverviewScreen";
+import WithdrawToBankScreen from "./src/screens/WithdrawToBankScreen";
 export type RootStackParamList = {
   Login: undefined;
   Home: { token: string };
@@ -19,7 +20,9 @@ export type RootStackParamList = {
 export async function initializePayment(amount: number, email: string, token: string) {
   return apiPost("/paystack/initialize", { amount, email }, token);
 }
-
+<Stack.Screen name="WithdrawToBank">
+  {(props) => <WithdrawToBankScreen {...props} token={token} />}
+</Stack.Screen>
 export async function verifyPayment(reference: string, token: string) {
   return apiGet(`/paystack/verify/${reference}`, token);
 }
