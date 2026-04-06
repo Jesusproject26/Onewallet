@@ -10,6 +10,13 @@ export type RootStackParamList = {
   Home: { token: string };
   Ajo: { token: string };
 };
+export async function initializePayment(amount: number, email: string, token: string) {
+  return apiPost("/paystack/initialize", { amount, email }, token);
+}
+
+export async function verifyPayment(reference: string, token: string) {
+  return apiGet(`/paystack/verify/${reference}`, token);
+}
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
