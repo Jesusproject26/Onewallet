@@ -75,19 +75,35 @@ export default function AjoContributionScreen({ route, navigation }) {
       <Text style={styles.label}>Group: {group.name}</Text>
       <Text style={styles.label}>Amount: ₦{group.contribution_amount}</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email for Paystack"
-        placeholderTextColor="#777"
-        value={email}
-        onChangeText={setEmail}
-      />
+     renderItem={({ item }) => (
+  <View style={styles.card}>
+    <Text style={styles.cardTitle}>{item.name}</Text>
+    <Text>Contribution: ₦{item.contribution_amount}</Text>
+    <Text>Cycle: {item.cycle_days} days</Text>
+    <Text>Position: {item.position}</Text>
+    <Text>Received: {item.has_received ? "Yes" : "No"}</Text>
 
-      <TouchableOpacity style={styles.button} onPress={handlePay} disabled={loading}>
-        <Text style={styles.buttonText}>
-          {loading ? "Processing..." : "Pay Contribution"}
-        </Text>
-      </TouchableOpacity>
+    <TouchableOpacity
+      style={{
+        backgroundColor: "#4c6ef5",
+        padding: 10,
+        borderRadius: 8,
+        marginTop: 10
+      }}
+      onPress={() =>
+        navigation.navigate("AjoContribution", {
+          token,
+          group: item
+        })
+      }
+    >
+      <Text style={{ color: "#fff", textAlign: "center" }}>
+        Pay Contribution
+      </Text>
+    </TouchableOpacity>
+  </View>
+)}
+
 
       {/* Success Modal */}
       <Modal visible={successVisible} transparent animationType="fade">
