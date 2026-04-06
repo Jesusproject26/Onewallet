@@ -10,6 +10,12 @@ router.get("/me", requireAuth, async (req: AuthedRequest, res) => {
     "SELECT balance FROM wallets WHERE user_id = $1",
     [userId]
   );
+  router.get("/balance", requireAuth, async (req: AuthedRequest, res) => {
+  const userId = req.userId!;
+  const result = await query("SELECT balance FROM wallets WHERE user_id = $1", [userId]);
+  res.json({ balance: Number(result.rows[0].balance) });
+});
+
   if (result.rows.length === 0) {
     return res.status(404).json({ message: "wallet not found" });
   }
