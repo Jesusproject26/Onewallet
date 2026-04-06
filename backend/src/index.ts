@@ -5,6 +5,8 @@ import { json } from "body-parser";
 import authRouter from "./routes/auth";
 import walletRouter from "./routes/wallet";
 import ajoRouter from "./routes/ajo";
+import paystackRouter from "./routes/paystack";
+
 
 dotenv.config();
 
@@ -19,6 +21,7 @@ app.get("/", (_req, res) => {
 app.use("/auth", authRouter);
 app.use("/wallet", walletRouter);
 app.use("/ajo", ajoRouter);
+app.use("/paystack", paystackRouter);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
