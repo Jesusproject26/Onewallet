@@ -42,5 +42,36 @@ router.get("/transactions", requireAuth, async (req: AuthedRequest, res) => {
   );
   res.json(result.rows);
 });
+router.post("/withdraw", requireAuth, async (req: AuthedRequest, res) => {
+  const userId = req.userId!;
+  const { amount } = req.body;
+
+  if (!amount || amount <= 0) {
+    return res.status(400).json({ message: "Invalid amount" });
+  }
+
+  const balanceResult = await query<{ balance: string }>(
+    "SELECT balance FROM wallets WHERE user_id = $1",
+    [userId]
+  );
+
+  const balance = Number(balanceResult.rows[0].balance);
+
+  if (balance < amount) {
+    return res.status(400).json({ message: "Insufficient balance" });
+  }
+
+  await query(
+    "UPDATE wallets SET balance = balance - $1 WHERE user_id = $2",
+    [amount, userId]
+  );
+
+  await query(
+    "INSERT INTO transactions (user_id, type, amount, description) VALUES ($1, 'debit', $2, $3)",
+    [userId, amount, "Wallet withdrawal"]
+  );
+
+  res.json({ success: true, amount });
+});
 
 export default router;
