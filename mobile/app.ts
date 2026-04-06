@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./src/screens/LoginScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import AjoScreen from "./src/screens/AjoScreen";
+import FundWalletScreen from "./src/screens/FundWalletScreen";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -32,6 +33,9 @@ export default function App() {
           </Stack.Screen>
         ) : (
           <>
+            <Stack.Screen name="FundWallet">
+  {(props) => <FundWalletScreen {...props} token={token} />}
+</Stack.Screen>
             <Stack.Screen name="Home">
               {(props) => <HomeScreen {...props} token={token} />}
             </Stack.Screen>
