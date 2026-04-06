@@ -12,6 +12,9 @@ import SetPinScreen from "./src/screens/SetPinScreen";
 import PinLoginScreen from "./src/screens/PinLoginScreen";
 import WalletOverviewScreen from "./src/screens/WalletOverviewScreen";
 import WithdrawToBankScreen from "./src/screens/WithdrawToBankScreen";
+import ProfileScreen from "./src/screens/ProfileScreen";
+import SettingsScreen from "./src/screens/SettingsScreen";
+import KycScreen from "./src/screens/KycScreen";
 export type RootStackParamList = {
   Login: undefined;
   Home: { token: string };
@@ -44,6 +47,17 @@ export default function App() {
           </Stack.Screen>
         ) : (
           <>
+            <Stack.Screen name="Profile">
+  {(props) => <ProfileScreen {...props} token={token} />}
+</Stack.Screen>
+
+<Stack.Screen name="Settings">
+  {(props) => <SettingsScreen {...props} token={token} />}
+</Stack.Screen>
+
+<Stack.Screen name="Kyc">
+  {(props) => <KycScreen {...props} token={token} />}
+</Stack.Screen>
             <Stack.Screen name="AjoContribution">
   {(props) => <AjoContributionScreen {...props} token={token} />}
 </Stack.Screen>
