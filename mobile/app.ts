@@ -5,6 +5,7 @@ import LoginScreen from "./src/screens/LoginScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import AjoScreen from "./src/screens/AjoScreen";
 import FundWalletScreen from "./src/screens/FundWalletScreen";
+import TransactionHistoryScreen from "./src/screens/TransactionHistoryScreen";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -33,6 +34,9 @@ export default function App() {
           </Stack.Screen>
         ) : (
           <>
+            <Stack.Screen name="TransactionHistory">
+  {(props) => <TransactionHistoryScreen {...props} token={token} />}
+</Stack.Screen>
             <Stack.Screen name="FundWallet">
   {(props) => <FundWalletScreen {...props} token={token} />}
 </Stack.Screen>
