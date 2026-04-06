@@ -34,6 +34,10 @@ export default function HomeScreen({ navigation, token }: Props) {
   title="Fund Wallet"
   onPress={() => navigation.navigate("FundWallet", { token })}
 />
+      <Button
+  title="View Transaction History"
+  onPress={() => navigation.navigate("TransactionHistory", { token })}
+/>
       <View style={{ height: 20 }} />
       <Button title="Go to Ajo" onPress={() => navigation.navigate("Ajo", { token })} />
     </View>
