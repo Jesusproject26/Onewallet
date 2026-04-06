@@ -15,6 +15,17 @@ export async function apiPost(path: string, body: any, token?: string) {
   }
   return res.json();
 }
+export async function getBanks() {
+  return apiGet("/bank/banks");
+}
+
+export async function resolveAccount(account_number: string, bank_code: string) {
+  return apiPost("/bank/resolve", { account_number, bank_code });
+}
+
+export async function withdrawToBank(data: any, token: string) {
+  return apiPost("/bank/withdraw", data, token);
+}
 
 export async function apiGet(path: string, token: string) {
   const res = await fetch(`${BASE_URL}${path}`, {
