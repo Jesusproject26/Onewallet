@@ -30,5 +30,17 @@ router.post("/topup", requireAuth, async (req: AuthedRequest, res) => {
   );
   res.json({ message: "topped up" });
 });
+router.get("/transactions", requireAuth, async (req: AuthedRequest, res) => {
+  const userId = req.userId!;
+  const result = await query(
+    `SELECT id, type, amount, description, created_at
+     FROM transactions
+     WHERE user_id = $1
+     ORDER BY created_at DESC
+     LIMIT 50`,
+    [userId]
+  );
+  res.json(result.rows);
+});
 
 export default router;
