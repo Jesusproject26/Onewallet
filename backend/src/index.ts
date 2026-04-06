@@ -10,8 +10,8 @@ import pinRouter from "./routes/pin";
 app.use("/pin", pinRouter);
 import bankRouter from "./routes/bank";
 app.use("/bank", bankRouter);
-
-
+import kycRouter from "./routes/kyc";
+app.use("/kyc", kycRouter);
 
 dotenv.config();
 
