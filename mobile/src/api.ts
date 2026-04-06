@@ -22,6 +22,14 @@ export async function apiGet(path: string, token: string) {
       Authorization: `Bearer ${token}`
     }
   });
+  export async function initializeAjoPayment(groupId: number, amount: number, email: string, token: string) {
+  return apiPost(`/ajo/groups/${groupId}/pay`, { amount, email }, token);
+}
+
+export async function verifyAjoPayment(groupId: number, reference: string, token: string) {
+  return apiGet(`/ajo/groups/${groupId}/verify/${reference}`, token);
+}
+
   if (!res.ok) {
     const text = await res.text();
     throw new Error(text || "Request failed");
