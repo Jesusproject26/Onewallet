@@ -8,7 +8,8 @@ import FundWalletScreen from "./src/screens/FundWalletScreen";
 import TransactionHistoryScreen from "./src/screens/TransactionHistoryScreen";
 import WithdrawalScreen from "./src/screens/WithdrawalScreen";
 import AjoContributionScreen from "./src/screens/AjoContributionScreen";
-
+import SetPinScreen from "./src/screens/SetPinScreen";
+import PinLoginScreen from "./src/screens/PinLoginScreen";
 export type RootStackParamList = {
   Login: undefined;
   Home: { token: string };
@@ -45,10 +46,16 @@ export default function App() {
             <Stack.Screen name="TransactionHistory">
   {(props) => <TransactionHistoryScreen {...props} token={token} />}
 </Stack.Screen>
-                                         <Stack.Screen name="Withdraw">
+             <Stack.Screen name="Withdraw">
   {(props) => <WithdrawalScreen {...props} token={token} />}
 </Stack.Screen>
+<Stack.Screen name="SetPin">
+  {(props) => <SetPinScreen {...props} token={token} />}
+</Stack.Screen>
 
+<Stack.Screen name="PinLogin">
+  {(props) => <PinLoginScreen {...props} token={token} />}
+</Stack.Screen>
             <Stack.Screen name="FundWallet">
   {(props) => <FundWalletScreen {...props} token={token} />}
 </Stack.Screen>
