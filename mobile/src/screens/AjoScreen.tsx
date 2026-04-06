@@ -1,100 +1,165 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, FlatList, TextInput } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../App";
-import { apiGet, apiPost } from "../api";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Linking,
+  Alert,
+  Modal
+} from "react-native";
+import { initializeAjoPayment, verifyAjoPayment } from "../api";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Ajo"> & {
-  token: string;
-};
+export default function AjoContributionScreen({ route, navigation }) {
+  const { token, group } = route.params;
 
-export default function AjoScreen({ token }: Props) {
-  const [groups, setGroups] = useState<any[]>([]);
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState("1000");
-  const [cycle, setCycle] = useState("7");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [successVisible, setSuccessVisible] = useState(false);
 
-  async function loadGroups() {
-    const res = await apiGet("/ajo/my-groups", token);
-    setGroups(res);
+  async function handlePay() {
+    if (!email) {
+      Alert.alert("Error", "Enter your email");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const init = await initializeAjoPayment(
+        group.id,
+        Number(group.contribution_amount),
+        email,
+        token
+      );
+
+      const authUrl = init.data.authorization_url;
+      const reference = init.data.reference;
+
+      Linking.openURL(authUrl);
+
+      Alert.alert(
+        "Verify Payment",
+        "After completing payment, tap OK to verify.",
+        [
+          {
+            text: "OK",
+            onPress: async () => {
+              const verify = await verifyAjoPayment(group.id, reference, token);
+
+              if (verify.success) {
+                setSuccessVisible(true);
+                setTimeout(() => {
+                  setSuccessVisible(false);
+                  navigation.goBack();
+                }, 2000);
+              } else {
+                Alert.alert("Failed", "Payment not successful");
+              }
+            }
+          }
+        ]
+      );
+    } catch (e: any) {
+      Alert.alert("Error", e.message);
+    } finally {
+      setLoading(false);
+    }
   }
-
-  async function createGroup() {
-    await apiPost(
-      "/ajo/groups",
-      { name, contributionAmount: Number(amount), cycleDays: Number(cycle) },
-      token
-    );
-    setName("");
-    await loadGroups();
-  }
-
-  useEffect(() => {
-    loadGroups();
-  }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>My Ajo Groups</Text>
-      <FlatList
-        data={groups}
-        keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>{item.name}</Text>
-            <Text>Contribution: ₦{item.contribution_amount}</Text>
-            <Text>Cycle: {item.cycle_days} days</Text>
-            <Text>Position: {item.position}</Text>
-            <Text>Received: {item.has_received ? "Yes" : "No"}</Text>
-          </View>
-        )}
+      <Text style={styles.title}>Ajo Contribution</Text>
+
+      <Text style={styles.label}>Group: {group.name}</Text>
+      <Text style={styles.label}>Amount: ₦{group.contribution_amount}</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Email for Paystack"
+        placeholderTextColor="#777"
+        value={email}
+        onChangeText={setEmail}
       />
-      <View style={styles.form}>
-        <Text style={styles.subtitle}>Create Group</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Group name"
-          value={name}
-          onChangeText={setName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Contribution amount"
-          value={amount}
-          onChangeText={setAmount}
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Cycle days"
-          value={cycle}
-          onChangeText={setCycle}
-          keyboardType="numeric"
-        />
-        <Button title="Create" onPress={createGroup} />
-      </View>
+
+      <TouchableOpacity style={styles.button} onPress={handlePay} disabled={loading}>
+        <Text style={styles.buttonText}>
+          {loading ? "Processing..." : "Pay Contribution"}
+        </Text>
+      </TouchableOpacity>
+
+      {/* Success Modal */}
+      <Modal visible={successVisible} transparent animationType="fade">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalBox}>
+            <Text style={styles.successText}>✓</Text>
+            <Text style={styles.successLabel}>Contribution Successful</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, paddingTop: 40 },
-  title: { fontSize: 22, marginBottom: 10 },
-  card: {
-    padding: 10,
+  container: {
+    flex: 1,
+    backgroundColor: "#0d0d0d",
+    padding: 20,
+    paddingTop: 50
+  },
+  title: {
+    fontSize: 26,
+    color: "#fff",
+    marginBottom: 20,
+    fontWeight: "600"
+  },
+  label: {
+    color: "#ccc",
+    marginBottom: 10,
+    fontSize: 16
+  },
+  input: {
+    backgroundColor: "#1a1a1a",
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 6,
+    borderColor: "#333",
+    padding: 15,
+    borderRadius: 10,
+    color: "#fff",
+    marginBottom: 15
+  },
+  button: {
+    backgroundColor: "#4c6ef5",
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 10
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "600"
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  modalBox: {
+    backgroundColor: "#111",
+    padding: 40,
+    borderRadius: 20,
+    alignItems: "center"
+  },
+  successText: {
+    fontSize: 60,
+    color: "#4caf50",
     marginBottom: 10
   },
-  cardTitle: { fontWeight: "bold", marginBottom: 4 },
-  form: { marginTop: 20 },
-  subtitle: { fontSize: 18, marginBottom: 10 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 8,
-    marginBottom: 8,
-    borderRadius: 6
+  successLabel: {
+    color: "#fff",
+    fontSize: 18
   }
 });
