@@ -19,6 +19,9 @@ export async function initializePayment(amount: number, email: string, token: st
 export async function verifyPayment(reference: string, token: string) {
   return apiGet(`/paystack/verify/${reference}`, token);
 }
+export async function withdraw(amount: number, token: string) {
+  return apiPost("/wallet/withdraw", { amount }, token);
+}
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
