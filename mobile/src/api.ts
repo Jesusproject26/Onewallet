@@ -25,6 +25,9 @@ export async function apiGet(path: string, token: string) {
   export async function initializeAjoPayment(groupId: number, amount: number, email: string, token: string) {
   return apiPost(`/ajo/groups/${groupId}/pay`, { amount, email }, token);
 }
+export async function getWalletBalance(token: string) {
+  return apiGet("/wallet/balance", token);
+}
 
 export async function verifyAjoPayment(groupId: number, reference: string, token: string) {
   return apiGet(`/ajo/groups/${groupId}/verify/${reference}`, token);
