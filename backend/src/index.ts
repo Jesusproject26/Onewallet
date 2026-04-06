@@ -8,6 +8,9 @@ import ajoRouter from "./routes/ajo";
 import paystackRouter from "./routes/paystack";
 import pinRouter from "./routes/pin";
 app.use("/pin", pinRouter);
+import bankRouter from "./routes/bank";
+app.use("/bank", bankRouter);
+
 
 
 dotenv.config();
