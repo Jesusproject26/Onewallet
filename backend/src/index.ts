@@ -6,6 +6,8 @@ import authRouter from "./routes/auth";
 import walletRouter from "./routes/wallet";
 import ajoRouter from "./routes/ajo";
 import paystackRouter from "./routes/paystack";
+import pinRouter from "./routes/pin";
+app.use("/pin", pinRouter);
 
 
 dotenv.config();
