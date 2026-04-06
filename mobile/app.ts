@@ -63,7 +63,7 @@ export default function App() {
             <Stack.Screen name="FundWallet">
   {(props) => <FundWalletScreen {...props} token={token} />}
 </Stack.Screen>
-            <Stack.Screen name="Home">
+           <Stack.Screen name="Home" component={WalletOverviewScreen} />
               {(props) => <HomeScreen {...props} token={token} />}
             </Stack.Screen>
             <Stack.Screen name="Ajo">
