@@ -30,6 +30,10 @@ export default function HomeScreen({ navigation, token }: Props) {
       <Text style={styles.title}>Wallet Balance</Text>
       <Text style={styles.balance}>₦{balance}</Text>
       <Button title="Top up ₦1000 (test)" onPress={topup} />
+      <Button
+  title="Fund Wallet"
+  onPress={() => navigation.navigate("FundWallet", { token })}
+/>
       <View style={{ height: 20 }} />
       <Button title="Go to Ajo" onPress={() => navigation.navigate("Ajo", { token })} />
     </View>
